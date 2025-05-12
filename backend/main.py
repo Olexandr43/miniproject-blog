@@ -35,9 +35,6 @@ app.add_middleware(
 
 DB_FILE = "backend/db.json"
 
-# Компілюємо регулярний вираз для видалення небажаних символів
-# Дозволяємо латинські букви, цифри, дефіс (-) та підкреслення (_)
-INVALID_SLUG_CHARS = re.compile(r'[^a-zA-Z0-9_-]')
 
 def load_articles_from_db() -> List[Article]:
     try:
@@ -62,19 +59,33 @@ async def get_articles():
 
 @app.get("/api/articles/{article_slug}", response_model=Article, tags=["Articles"], summary="Отримати статтю за її slug")
 async def get_article(article_slug: str):
-    # Очищаємо вхідний slug від небажаних символів
-    sanitized_slug = INVALID_SLUG_CHARS.sub('', article_slug)
-    print(f"Отримано slug: '{article_slug}', очищений slug: '{sanitized_slug}'")
+    # Крок 1: Отримуємо slug (вже декодований фронтендом)
+    raw_slug = article_slug
+
+    # Крок 2: Нормалізуємо рядок
+    # Переводимо у нижній регістр
+    normalized_slug = raw_slug.lower()
+    # Замінюємо пробіли та інші роздільники на дефіси
+    normalized_slug = re.sub(r'[\s]+', '-', normalized_slug)
+    # Видаляємо символи, які не є літерами, цифрами, дефісами або підкресленнями
+    normalized_slug = re.sub(r'[^a-zA-Z0-9_-]', '', normalized_slug)
+    # Видаляємо подвійні дефіси або підкреслення
+    normalized_slug = re.sub(r'[-_]+', '-', normalized_slug) # Можливо, варто залишити підкреслення? Якщо ні, то re.sub(r'-+', '-', normalized_slug)
+    # Видаляємо дефіси або підкреслення на початку або в кінці
+    normalized_slug = normalized_slug.strip('-_') # Можливо, варто залишити підкреслення? Якщо ні, то normalized_slug.strip('-')
+
+
+    print(f"Отримано slug: '{raw_slug}', нормалізований slug: '{normalized_slug}'") # Для відладки
 
     articles = load_articles_from_db()
-    print(f"Шукаємо статтю з очищеним slug: {sanitized_slug}")
+    print(f"Шукаємо статтю з нормалізованим slug: {normalized_slug}")
     for article in articles:
         print(f"Перевіряємо статтю зі slug: {article.slug}")
-        if article.slug == sanitized_slug:
+        if article.slug == normalized_slug: 
             return article
 
-    if not sanitized_slug:
-        raise HTTPException(status_code=400, detail="Некоректний slug після очищення")
+    if not normalized_slug:
+         raise HTTPException(status_code=400, detail="Некоректний slug після нормалізації")
     else:
         raise HTTPException(status_code=404, detail="Статтю не знайдено")
 
