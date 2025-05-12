@@ -27,9 +27,10 @@ header {
     background: linear-gradient(90deg, #4dabf7 0%, #339af0 100%);
     color: #ffffff;
     padding: 1.5rem 1rem;
-    text-align: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    position: relative;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 header h1 {
@@ -37,15 +38,13 @@ header h1 {
     font-weight: 600;
     letter-spacing: -0.5px;
     margin: 0;
+    flex-grow: 1;
+    text-align: center;
 }
 
 header .back-link {
     color: #ffffff;
     text-decoration: none;
-    position: absolute;
-    top: 50%;
-    left: 1.5rem;
-    transform: translateY(-50%);
     font-size: 1rem;
     font-weight: 500;
     transition: opacity 0.3s ease;
@@ -53,6 +52,8 @@ header .back-link {
     background-color: rgba(255, 255, 255, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 5px;
+    margin-right: 1rem;
+    flex-shrink: 0;
 }
 
 header .back-link:hover {
@@ -268,24 +269,16 @@ form button:active {
 @media (min-width: 768px) {
     header {
         padding: 2.5rem 2rem;
-        text-align: left;
-        display: flex;
-        align-items: center;
         justify-content: space-between;
     }
 
     header h1 {
         font-size: 2.8rem;
-        text-align: center;
-        flex-grow: 1;
-        margin-left: 5rem;
     }
 
     header .back-link {
-        position: static;
-        transform: none;
-        margin-right: auto;
         padding: 0.6rem 1rem;
+        margin-right: 0;
     }
 
     main {
