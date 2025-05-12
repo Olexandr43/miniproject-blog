@@ -70,7 +70,7 @@ miniproject-blog/
 
 ## Учасники та ролі
 
-* **Backend розробка (FastAPI), Frontend розробка (HTML/CSS/JS):** Василенко Олександр 1к-23 + GeminiAI
+* **Backend розробка (FastAPI), Frontend розробка (HTML/CSS/JS):** Василенко Олександр 1к-23 + GeminiAI(таке життя...)
 * **Управління репозиторієм, документація (Swagger/OpenAPI, README.md), розгортання на Vercel:** Василенко Олександр 1к-23
 
 ## Swagger/OpenAPI Документація
