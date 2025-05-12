@@ -41,7 +41,7 @@ document.getElementById('article-form').addEventListener('submit', function (eve
     const newArticle = {
         id: Date.now(),
         title: title,
-        slug: title.toLowerCase().replace(/ /g, '-'),
+        slug: title.toLowerCase().replace(/ /g, '-').replace(/[^a-z0-9-]/g, ''),
         content: content,
         author: author || "Автор 1",
         date: new Date().toISOString().split('T')[0]
@@ -54,12 +54,20 @@ document.getElementById('article-form').addEventListener('submit', function (eve
         },
         body: JSON.stringify(newArticle)
     })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             console.log('Стаття додана:', data);
+            alert('Ваша стаття успішно додана! Вона з\'явиться для перегляду незабаром.');
+            document.getElementById('article-form').reset();
         })
         .catch(error => {
-            console.error('Помилка:', error);
+            console.error('Помилка при додаванні статті:', error);
+            alert('Виникла помилка при додаванні статті. Спробуйте ще раз або зверніться до адміністратора.');
         });
 });
 
