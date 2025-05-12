@@ -66,10 +66,14 @@ async def get_article(article_slug: str):
 
 @app.post("/api/articles", response_model=Article, tags=["Articles"], summary="Створити нову статтю")
 async def create_article(article: Article):
-    articles = load_articles_from_db()
-    articles.append(article)
-    save_articles_to_db(articles)
-    return article
+    try:
+        articles = load_articles_from_db()
+        articles.append(article)
+        save_articles_to_db(articles)
+        return article
+    except Exception as e:
+        print(f"Помилка при створенні статті: {e}")
+        raise HTTPException(status_code=500, detail="Не вдалося створити статтю")
 
 @app.delete("/api/articles/{article_id}", tags=["Articles"], summary="Видалити статтю")
 async def delete_article(article_id: int):
