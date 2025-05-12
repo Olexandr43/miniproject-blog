@@ -31,7 +31,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-DB_FILE = "db.json"
+DB_FILE = "data/db.json"
 
 def load_articles_from_db() -> List[Article]:
     try:
