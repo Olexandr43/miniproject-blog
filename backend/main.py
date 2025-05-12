@@ -51,6 +51,7 @@ def load_articles_from_db() -> List[Article]:
 @app.get("/api/articles", response_model=List[ArticleSummary], tags=["Articles"], summary="Отримати список всіх статей")
 async def get_articles():
     articles = load_articles_from_db()
+    print(f"Завантажені статті: {articles}")
     return [ArticleSummary(id=article.id, title=article.title, slug=article.slug, author=article.author, date=article.date) for article in articles]
 
 @app.get("/articles/{article_slug}", response_model=Article, tags=["Articles"], summary="Отримати статтю за її slug")
