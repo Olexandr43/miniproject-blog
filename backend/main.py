@@ -44,7 +44,7 @@ def load_articles_from_db() -> List[Article]:
         print(f"Error: {DB_FILE} містить некоректний JSON.")
         return []
 
-@app.get("/articles", response_model=List[ArticleSummary], tags=["Articles"], summary="Отримати список всіх статей")
+@app.get("/api/articles", response_model=List[ArticleSummary], tags=["Articles"], summary="Отримати список всіх статей")
 async def get_articles():
     articles = load_articles_from_db()
     return [ArticleSummary(id=article.id, title=article.title, slug=article.slug, author=article.author, date=article.date) for article in articles]
