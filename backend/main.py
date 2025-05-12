@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Body
 from fastapi.middleware.cors import CORSMiddleware
 import json
 from typing import List
@@ -63,3 +63,24 @@ async def get_article(article_slug: str):
         if article.slug == article_slug:
             return article
     raise HTTPException(status_code=404, detail="Статтю не знайдено")
+
+@app.post("/api/articles", response_model=Article, tags=["Articles"], summary="Створити нову статтю")
+async def create_article(article: Article):
+    articles = load_articles_from_db()
+    articles.append(article)
+    save_articles_to_db(articles)
+    return article
+
+@app.delete("/api/articles/{article_id}", tags=["Articles"], summary="Видалити статтю")
+async def delete_article(article_id: int):
+    articles = load_articles_from_db()
+    for article in articles:
+        if article.id == article_id:
+            articles.remove(article)
+            save_articles_to_db(articles)
+            return {"detail": "Статтю видалено"}
+    raise HTTPException(status_code=404, detail="Статтю не знайдено")
+
+def save_articles_to_db(articles: List[Article]):
+    with open(DB_FILE, "w", encoding="utf-8") as f:
+        json.dump([article.dict() for article in articles], f, ensure_ascii=False, indent=4)
