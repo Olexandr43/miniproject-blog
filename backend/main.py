@@ -4,6 +4,7 @@ import json
 from typing import List
 from .models import Article, ArticleSummary
 from .github_api import create_github_file
+import re
 
 app = FastAPI(
     title="Блог API",
@@ -71,25 +72,23 @@ def transliterate(text: str) -> str:
         'ж': 'zh', 'з': 'z', 'и': 'y', 'і': 'i', 'ї': 'yi', 'й': 'y', 'к': 'k', 'л': 'l',
         'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u',
         'ф': 'f', 'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ь': '', 'ю': 'yu',
-        'я': 'ya',
-        '_': '-', '.': '-', ',': '-', '!': '-', '?': '-', '@': '-', '#': '-'
+        'я': 'ya'
     }
-    text = text.lower()
+    hyphen_symbols = ' _.,!?'
 
+    text = text.lower()
     processed_chars = []
+
     for char in text:
-        if char.isalnum():
+        if char in translit_dict:
+            processed_chars.append(translit_dict[char])
+        elif 'a' <= char <= 'z' or '0' <= char <= '9':
             processed_chars.append(char)
-        elif char == ' ':
-             processed_chars.append('-') 
-        else:
-            processed_chars.append(translit_dict.get(char, ''))
+        elif char in hyphen_symbols:
+             processed_chars.append('-')
 
     text = ''.join(processed_chars)
-
-    import re
     text = re.sub(r'-+', '-', text)
-
     text = text.strip('-')
 
     return text
