@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const articlesList = document.getElementById('articles-list');
-    const apiUrl = 'http://127.0.0.1:8000/articles';
+    const apiUrl = '/api/articles';
 
     fetch(apiUrl)
         .then(response => {

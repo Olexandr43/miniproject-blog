@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
     const articleSlug = params.get('slug');
 
-    const apiUrl = `http://127.0.0.1:8000/articles/${articleSlug}`;
+    const apiUrl = `/api/articles/${articleSlug}`;
 
     if (articleSlug) {
         fetch(apiUrl)
