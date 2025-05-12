@@ -36,14 +36,15 @@ document.getElementById('article-form').addEventListener('submit', function (eve
 
     const title = document.getElementById('article-title').value;
     const content = document.getElementById('article-content').value;
+    const author = document.getElementById('article-author').value;
 
     const newArticle = {
-        id: Date.now(),  // Генерація ID на основі часу
+        id: Date.now(),
         title: title,
-        slug: title.toLowerCase().replace(/ /g, '-'),  // Генерація slug
+        slug: title.toLowerCase().replace(/ /g, '-'),
         content: content,
-        author: "Автор 1",  // Можна змінити на реального автора
-        date: new Date().toISOString().split('T')[0]  // Сьогоднішня дата
+        author: author || "Автор 1",
+        date: new Date().toISOString().split('T')[0]
     };
 
     fetch('/api/articles', {
@@ -56,7 +57,6 @@ document.getElementById('article-form').addEventListener('submit', function (eve
         .then(response => response.json())
         .then(data => {
             console.log('Стаття додана:', data);
-            // Оновіть список статей або виконайте інші дії
         })
         .catch(error => {
             console.error('Помилка:', error);
@@ -70,9 +70,9 @@ const createFile = async () => {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            repo: 'Olexandr43/miniproject-blog',  // Мій репозиторій на GitHub
-            path: 'backend/db.json',              // Шлях до файлу з даними
-            content: 'Оновлений вміст бази даних' // Вміст для оновлення
+            repo: 'Olexandr43/miniproject-blog',
+            path: 'backend/db.json',
+            content: 'Оновлений вміст бази даних'
         })
     });
 

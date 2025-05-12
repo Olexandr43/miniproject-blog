@@ -1,9 +1,9 @@
-from fastapi import FastAPI, HTTPException, Body
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import json
 from typing import List
 from .models import Article, ArticleSummary
-from .github_api import create_github_file  # Імпорт функції
+from .github_api import create_github_file
 
 app = FastAPI(
     title="Блог API",
@@ -65,9 +65,20 @@ async def get_article(article_slug: str):
             return article
     raise HTTPException(status_code=404, detail="Статтю не знайдено")
 
+def transliterate(text: str) -> str:
+    translit_dict = {
+        'а': 'a', 'б': 'b', 'в': 'v', 'г': 'h', 'ґ': 'g', 'д': 'd', 'е': 'e', 'є': 'ye',
+        'ж': 'zh', 'з': 'z', 'и': 'y', 'і': 'i', 'ї': 'yi', 'й': 'y', 'к': 'k', 'л': 'l',
+        'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u',
+        'ф': 'f', 'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ь': '', 'ю': 'yu',
+        'я': 'ya'
+    }
+    return ''.join(translit_dict.get(char, char) for char in text.lower())
+
 @app.post("/api/articles", response_model=Article, tags=["Articles"], summary="Створити нову статтю")
 async def create_article(article: Article):
     try:
+        article.slug = transliterate(article.title)
         articles = load_articles_from_db()
         articles.append(article)
         content = json.dumps([article.dict() for article in articles], ensure_ascii=False, indent=4)

@@ -3,7 +3,7 @@ import requests
 from fastapi import HTTPException
 import base64
 
-GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")  # Ваш токен доступу
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 GITHUB_API_URL = "https://api.github.com"
 
 def create_github_file(repo: str, path: str, content: str):
@@ -13,18 +13,14 @@ def create_github_file(repo: str, path: str, content: str):
         "Accept": "application/vnd.github.v3+json"
     }
 
-    # Отримуємо інформацію про файл, щоб отримати SHA
     response = requests.get(url, headers=headers)
     
     if response.status_code == 200:
-        # Файл існує, отримуємо SHA
         file_info = response.json()
         sha = file_info['sha']
     else:
-        # Файл не існує, SHA не потрібен
         sha = None
 
-    # Кодуємо вміст у Base64
     encoded_content = base64.b64encode(content.encode('utf-8')).decode('utf-8')
     data = {
         "message": "Create or update file",
@@ -32,7 +28,7 @@ def create_github_file(repo: str, path: str, content: str):
     }
 
     if sha:
-        data["sha"] = sha  # Додаємо SHA, якщо файл існує
+        data["sha"] = sha
 
     response = requests.put(url, headers=headers, json=data)
     
