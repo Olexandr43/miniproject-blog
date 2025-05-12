@@ -54,11 +54,12 @@ async def get_articles():
     print(f"Завантажені статті: {articles}")
     return [ArticleSummary(id=article.id, title=article.title, slug=article.slug, author=article.author, date=article.date) for article in articles]
 
-@app.get("/articles/{article_slug}", response_model=Article, tags=["Articles"], summary="Отримати статтю за її slug")
+@app.get("/api/articles/{article_slug}", response_model=Article, tags=["Articles"], summary="Отримати статтю за її slug")
 async def get_article(article_slug: str):
     articles = load_articles_from_db()
     print(f"Шукаємо статтю з slug: {article_slug}")
     for article in articles:
+        print(f"Знайдена стаття: {article.slug}")
         if article.slug == article_slug:
             return article
     raise HTTPException(status_code=404, detail="Статтю не знайдено")
