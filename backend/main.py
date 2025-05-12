@@ -68,8 +68,9 @@ async def get_article(article_slug: str):
 @app.post("/api/articles", response_model=Article, tags=["Articles"], summary="Створити нову статтю")
 async def create_article(article: Article):
     try:
-        # Зберігаємо статтю у GitHub
-        content = json.dumps(article.dict(), ensure_ascii=False, indent=4)
+        articles = load_articles_from_db()
+        articles.append(article)
+        content = json.dumps([article.dict() for article in articles], ensure_ascii=False, indent=4)
         create_github_file('Olexandr43/miniproject-blog', f'backend/db.json', content)
         return article
     except Exception as e:
