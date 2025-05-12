@@ -4,6 +4,7 @@ import json
 from typing import List
 from .models import Article, ArticleSummary
 from .github_api import create_github_file
+import re
 
 app = FastAPI(
     title="Блог API",
@@ -34,6 +35,10 @@ app.add_middleware(
 
 DB_FILE = "backend/db.json"
 
+# Компілюємо регулярний вираз для видалення небажаних символів
+# Дозволяємо латинські букви, цифри, дефіс (-) та підкреслення (_)
+INVALID_SLUG_CHARS = re.compile(r'[^a-zA-Z0-9_-]')
+
 def load_articles_from_db() -> List[Article]:
     try:
         with open(DB_FILE, "r", encoding="utf-8") as f:
@@ -57,13 +62,21 @@ async def get_articles():
 
 @app.get("/api/articles/{article_slug}", response_model=Article, tags=["Articles"], summary="Отримати статтю за її slug")
 async def get_article(article_slug: str):
+    # Очищаємо вхідний slug від небажаних символів
+    sanitized_slug = INVALID_SLUG_CHARS.sub('', article_slug)
+    print(f"Отримано slug: '{article_slug}', очищений slug: '{sanitized_slug}'")
+
     articles = load_articles_from_db()
-    print(f"Шукаємо статтю з slug: {article_slug}")
+    print(f"Шукаємо статтю з очищеним slug: {sanitized_slug}")
     for article in articles:
-        print(f"Знайдена стаття: {article.slug}")
-        if article.slug == article_slug:
+        print(f"Перевіряємо статтю зі slug: {article.slug}")
+        if article.slug == sanitized_slug:
             return article
-    raise HTTPException(status_code=404, detail="Статтю не знайдено")
+
+    if not sanitized_slug:
+        raise HTTPException(status_code=400, detail="Некоректний slug після очищення")
+    else:
+        raise HTTPException(status_code=404, detail="Статтю не знайдено")
 
 def transliterate(text: str) -> str:
     translit_dict = {
