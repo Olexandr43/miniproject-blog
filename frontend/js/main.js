@@ -62,3 +62,25 @@ document.getElementById('article-form').addEventListener('submit', function (eve
             console.error('Помилка:', error);
         });
 });
+
+const createFile = async () => {
+    const response = await fetch('/api/github/create-file', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            repo: 'Olexandr43/miniproject-blog',  // Мій репозиторій на GitHub
+            path: 'backend/db.json',              // Шлях до файлу з даними
+            content: 'Оновлений вміст бази даних' // Вміст для оновлення
+        })
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        console.log(data.message);
+    } else {
+        const error = await response.json();
+        console.error('Error:', error);
+    }
+};

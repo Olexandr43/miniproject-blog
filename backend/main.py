@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import json
 from typing import List
 from .models import Article, ArticleSummary
+from .github_api import create_github_file  # Імпорт функції
 
 app = FastAPI(
     title="Блог API",
@@ -88,3 +89,7 @@ async def delete_article(article_id: int):
 def save_articles_to_db(articles: List[Article]):
     with open(DB_FILE, "w", encoding="utf-8") as f:
         json.dump([article.dict() for article in articles], f, ensure_ascii=False, indent=4)
+
+@app.post("/api/github/create-file")
+async def create_file(repo: str, path: str, content: str):
+    return create_github_file(repo, path, content)
