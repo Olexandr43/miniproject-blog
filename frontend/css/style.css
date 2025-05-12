@@ -1,0 +1,88 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+header {
+    background: #333;
+    color: #fff;
+    padding: 1rem 0;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+}
+
+header .back-link {
+    color: #fff;
+    text-decoration: none;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 1rem;
+}
+
+header .back-link:hover {
+    text-decoration: underline;
+}
+
+main {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#articles-list .article-item {
+    border-bottom: 1px dotted #ccc;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+#articles-list .article-item:last-child {
+    border-bottom: none;
+}
+
+#articles-list h3 a {
+    color: #333;
+    text-decoration: none;
+}
+
+#articles-list h3 a:hover {
+    color: #007bff;
+}
+
+#articles-list p {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+article#article-content {
+    margin-top: 20px;
+    white-space: pre-wrap;
+}
+
+#article-author,
+#article-date {
+    font-size: 0.9em;
+    color: #555;
+    margin-top: 10px;
+}
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    background: #333;
+    color: #fff;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    margin-top: 30px;
+}
