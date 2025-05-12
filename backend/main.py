@@ -39,9 +39,13 @@ def load_articles_from_db() -> List[Article]:
             articles_data = json.load(f)
             return [Article(**article) for article in articles_data]
     except FileNotFoundError:
+        print(f"Error: Файл {DB_FILE} не знайдено.")
         return []
     except json.JSONDecodeError:
         print(f"Error: {DB_FILE} містить некоректний JSON.")
+        return []
+    except Exception as e:
+        print(f"Unexpected error: {e}")
         return []
 
 @app.get("/api/articles", response_model=List[ArticleSummary], tags=["Articles"], summary="Отримати список всіх статей")
