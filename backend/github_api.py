@@ -1,6 +1,7 @@
 import os
 import requests
 from fastapi import HTTPException
+import base64
 
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")  # Ваш токен доступу
 GITHUB_API_URL = "https://api.github.com"
@@ -11,9 +12,11 @@ def create_github_file(repo: str, path: str, content: str):
         "Authorization": f"token {GITHUB_TOKEN}",
         "Accept": "application/vnd.github.v3+json"
     }
+    # Кодуємо вміст у Base64
+    encoded_content = base64.b64encode(content.encode('utf-8')).decode('utf-8')
     data = {
         "message": "Create file",
-        "content": content.encode("utf-8").decode("latin1")  # Кодируйте в base64
+        "content": encoded_content  # Використовуємо закодований вміст
     }
     response = requests.put(url, headers=headers, json=data)
     
