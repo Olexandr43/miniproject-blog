@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import json
 from typing import List
-from models import Article, ArticleSummary
+from .models import Article, ArticleSummary
 
 app = FastAPI(
     title="Блог API",
