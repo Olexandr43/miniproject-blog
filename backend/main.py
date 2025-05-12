@@ -57,6 +57,7 @@ async def get_articles():
 @app.get("/articles/{article_slug}", response_model=Article, tags=["Articles"], summary="Отримати статтю за її slug")
 async def get_article(article_slug: str):
     articles = load_articles_from_db()
+    print(f"Шукаємо статтю з slug: {article_slug}")
     for article in articles:
         if article.slug == article_slug:
             return article
